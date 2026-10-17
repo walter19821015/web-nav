@@ -213,8 +213,42 @@
       </div>
     </div>
   </div>
-  
+
+  <!-- 意见反馈模态框 (Giscus) -->
+  <div id="feedbackModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 opacity-0 invisible transition-all duration-300">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl mx-4 transform translate-y-8 transition-all duration-300 max-h-[90vh] overflow-hidden flex flex-col">
+      <div class="p-6 overflow-y-auto">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">意见反馈</h2>
+          <button id="closeFeedbackModal" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300" aria-label="关闭">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">登录 GitHub 账号后留言，你可以在 GitHub Discussions 中查看所有反馈。</p>
+        <script src="https://giscus.app/client.js"
+                data-repo="walter19821015/web-nav"
+                data-repo-id="R_kgDOVK7zEw"
+                data-category="Ideas"
+                data-category-id="DIC_kwDOVK7zE84DIs5I"
+                data-mapping="pathname"
+                data-strict="0"
+                data-reactions-enabled="1"
+                data-emit-metadata="0"
+                data-input-position="bottom"
+                data-theme="light"
+                data-lang="zh-CN"
+                data-loading="lazy"
+                crossorigin="anonymous"
+                async>
+        </script>
+      </div>
+    </div>
+  </div>
+
   <script src="/js/home-ui.js?v=7c74dc1b"></script>
+  <script src="/js/home-feedback.js?v=c8e6147e"></script>
   <script src="/js/home-cards.js?v=acd23365"></script>
   <script src="/js/home-submit.js?v=5457a66d"></script>
   <script src="/js/home-search.js?v=fd3df0ae"></script>

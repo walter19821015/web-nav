@@ -384,7 +384,15 @@ export async function onRequest(context) {
       <div class="hidden min-[550px]:block">${horizontalHeaderContent}</div>`;
   }
 
-  const topRightActionsHtml = `<div class="fixed top-4 right-4 z-50 flex items-center gap-3">${themeIconHtml}${adminIconHtml}</div>`;
+  // 意见反馈按钮：放到主题切换左边，格式与现有 top-action-icon 对齐
+  const feedbackIconHtml = `
+    <button id="feedbackBtn" class="top-action-icon feedback-action-icon" title="意见反馈" aria-label="意见反馈">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+    </button>`;
+
+  const topRightActionsHtml = `<div class="fixed top-4 right-4 z-50 flex items-center gap-3">${feedbackIconHtml}${themeIconHtml}${adminIconHtml}</div>`;
   const leftTopActionHtml = `
     <div class="fixed top-4 left-4 z-50 ${mobileToggleVisibilityClass}">
       <button id="sidebarToggle" class="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md hover:bg-gray-100 dark:hover:bg-gray-700">
