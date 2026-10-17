@@ -31,6 +31,8 @@ export const STRINGS = {
         'modal.add.cancel': '取消',
         'modal.add.submit': '提交',
         'modal.add.loading': '加载中...',
+        'home.bookmark.unit': '个书签',
+        'home.bookmark.all_count': '全部收藏 · {count} 个书签',
     },
     'en-US': {
         'site.name': 'Pipilu Tools',
@@ -61,6 +63,8 @@ export const STRINGS = {
         'modal.add.cancel': 'Cancel',
         'modal.add.submit': 'Submit',
         'modal.add.loading': 'Loading...',
+        'home.bookmark.unit': ' bookmarks',
+        'home.bookmark.all_count': 'All Bookmarks · {count}',
     },
 };
 

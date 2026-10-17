@@ -246,14 +246,14 @@ export async function onRequest(context) {
   const allLinkActiveMarker = allLinkActive ? 'nav-item-active' : '';
   const horizontalAllLink = `
     <div class="menu-item-wrapper relative inline-block text-left">
-      <a href="?catalog=all" class="nav-btn ${allLinkClass} ${allLinkActiveMarker}">全部</a>
+      <a href="?catalog=all" class="nav-btn ${allLinkClass} ${allLinkActiveMarker}">${i18nT('home.category.all', preferredLang)}</a>
     </div>`;
   const horizontalCatalogMarkup = horizontalAllLink + renderHorizontalMenu(rootCategories, currentCatalogName);
   const catalogLinkMarkup = renderVerticalMenu(rootCategories, currentCatalogName, isCustomWallpaper);
 
   // === 10. 生成站点卡片 HTML ===
   let sitesGridMarkup = sites.length > 0
-    ? renderSiteCards(sites, S)
+    ? renderSiteCards(sites, S, preferredLang)
     : renderEmptyState(categories.length, S.home_hide_admin);
 
   // === 11. 计算 Grid 列数 ===
@@ -277,7 +277,9 @@ export async function onRequest(context) {
   let gridClass = `grid ${getMobileGridClass(S.mobile_layout_grid_cols)} ${getDesktopGridClass(S.layout_grid_cols)} ${mobileCardStyleClass} ${desktopCardStyleClass} gap-3 sm:gap-6 justify-items-center`;
 
   // === 12. 计算文本和统计信息 ===
-  const headingPlainText = currentCatalogName ? `${currentCatalogName} · ${sites.length} 个书签` : `全部收藏 · ${sites.length} 个书签`;
+  const headingPlainText = currentCatalogName
+    ? `${currentCatalogName} · ${sites.length} ${i18nT('home.bookmark.unit', preferredLang)}`
+    : `${i18nT('home.bookmark.all_count', preferredLang, { count: sites.length })}`;
   const headingText = escapeHTML(headingPlainText);
   const headingDefaultAttr = escapeHTML(headingPlainText);
   const headingActiveAttr = catalogExists ? escapeHTML(currentCatalogName) : '';
@@ -348,7 +350,7 @@ export async function onRequest(context) {
       <div class="home-search-shell relative max-w-xl mx-auto">
         ${searchEngineOptions}
         <div class="home-search-field relative">
-          <input type="search" placeholder="搜索书签..." class="search-input-target w-full pl-12 pr-4 py-3.5 rounded-2xl transition-all shadow-lg outline-none focus:outline-none focus:ring-2 ${searchInputClass}" autocomplete="new-password" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="search" enterkeyhint="search" aria-label="搜索书签" data-lpignore="true" data-1p-ignore="true" data-bwignore="true" data-form-type="other">
+          <input type="search" placeholder="{{HOME_SEARCH_PLACEHOLDER}}" class="search-input-target w-full pl-12 pr-4 py-3.5 rounded-2xl transition-all shadow-lg outline-none focus:outline-none focus:ring-2 ${searchInputClass}" autocomplete="new-password" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="search" enterkeyhint="search" aria-label="{{HOME_SEARCH_PLACEHOLDER}}" data-lpignore="true" data-1p-ignore="true" data-bwignore="true" data-form-type="other">
           <svg xmlns="http://www.w3.org/2000/svg" class="home-search-icon h-6 w-6 absolute left-4 top-3.5 ${searchIconClass}" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
         </div>
       </div>
@@ -362,7 +364,7 @@ export async function onRequest(context) {
       <div class="home-search-shell relative max-w-xl mx-auto ${categoryPosition === 'below_search' ? 'mb-8' : ''}">
         ${searchEngineOptions}
         <div class="home-search-field relative">
-          <input id="headerSearchInput" type="search" placeholder="搜索书签..." class="search-input-target w-full pl-12 pr-4 py-3.5 rounded-2xl transition-all shadow-lg outline-none focus:outline-none focus:ring-2 ${searchInputClass}" autocomplete="new-password" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="search" enterkeyhint="search" aria-label="搜索书签" data-lpignore="true" data-1p-ignore="true" data-bwignore="true" data-form-type="other">
+          <input id="headerSearchInput" type="search" placeholder="{{HOME_SEARCH_PLACEHOLDER}}" class="search-input-target w-full pl-12 pr-4 py-3.5 rounded-2xl transition-all shadow-lg outline-none focus:outline-none focus:ring-2 ${searchInputClass}" autocomplete="new-password" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="search" enterkeyhint="search" aria-label="{{HOME_SEARCH_PLACEHOLDER}}" data-lpignore="true" data-1p-ignore="true" data-bwignore="true" data-form-type="other">
           <svg xmlns="http://www.w3.org/2000/svg" class="home-search-icon h-6 w-6 absolute left-4 top-3.5 ${searchIconClass}" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
         </div>
       </div>
@@ -599,6 +601,10 @@ export async function onRequest(context) {
     'SITE_NAME': escapeHTML(i18nT('site.name', preferredLang, { default: siteName })),
     'SITE_TAGLINE': escapeHTML(i18nT('site.tagline', preferredLang)),
     'SITE_DESCRIPTION': escapeHTML(i18nT('site.subtitle', preferredLang, { default: siteDescription })),
+    'HOME_SEARCH_PLACEHOLDER': escapeHTML(i18nT('home.search.placeholder', preferredLang)),
+    'T_HOME_COPY': escapeHTML(i18nT('home.bookmark.copy', preferredLang)),
+    'T_HOME_COPIED': escapeHTML(i18nT('home.bookmark.copied', preferredLang)),
+    'T_NO_DESC': escapeHTML(i18nT('home.bookmark.no_desc', preferredLang)),
     'CANONICAL_URL': escapeHTML(canonicalUrl),
     'OG_IMAGE_URL': escapeHTML(ogImageUrl),
     'FOOTER_TEXT': escapeHTML(footerText),

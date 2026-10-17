@@ -67,7 +67,7 @@
         }
       });
 
-      let placeholder = '搜索书签...';
+      let placeholder = (window.t && window.t('home.search.placeholder')) || '搜索书签...';
       switch (engine) {
         case 'google': placeholder = 'Google 搜索...'; break;
         case 'baidu': placeholder = '百度搜索...'; break;

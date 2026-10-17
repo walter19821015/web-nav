@@ -260,8 +260,8 @@
             <span class="${cardConfig.urlTextClass}" title="${site.displayUrlHtml}">${site.displayUrlHtml}</span>
             <button class="${cardConfig.copyButtonBaseClass} ${site.hasValidUrl ? cardConfig.copyButtonEnabledClass : cardConfig.copyButtonDisabledClass}" data-url="${site.urlHtml}" ${site.hasValidUrl ? '' : 'disabled'}>
               <svg class="h-3 w-3 ${cardConfig.hideCopyText ? '' : 'mr-1'}"><use href="#icon-copy"/></svg>
-              ${cardConfig.hideCopyText ? '' : '<span class="copy-text">复制</span>'}
-              <span class="copy-success hidden absolute -top-8 right-0 bg-accent-500 text-white text-xs px-2 py-1 rounded shadow-md">已复制!</span>
+              ${(function(){var c=(window.t&&window.t('home.bookmark.copy'))||'复制';return cardConfig.hideCopyText?'':'<span class="copy-text">'+c+'</span>'})()}
+              <span class="copy-success hidden absolute -top-8 right-0 bg-accent-500 text-white text-xs px-2 py-1 rounded shadow-md">${(window.t&&window.t('home.bookmark.copied'))||'已复制!'}</span>
             </button>
           </div>`;
 

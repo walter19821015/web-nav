@@ -9,9 +9,9 @@ import { buildCardTemplateConfig, buildCardViewModel } from './card-model';
  * @param {object} settings - 解析后的设置对象
  * @returns {string} 站点卡片 HTML 字符串
  */
-export function renderSiteCards(sites, settings) {
-  const config = buildCardTemplateConfig(settings);
-  const processed = sites.map(site => buildCardViewModel(site));
+export function renderSiteCards(sites, settings, lang) {
+  const config = buildCardTemplateConfig(settings, lang);
+  const processed = sites.map(site => buildCardViewModel(site, lang));
 
   return processed.map((card, index) => {
     const isAboveFold = index < config.aboveFoldImageCount;
