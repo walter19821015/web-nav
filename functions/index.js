@@ -115,7 +115,7 @@ export async function onRequest(context) {
   const settingsKeys = getSettingsKeys();
   const settingsPlaceholders = settingsKeys.map(() => '?').join(',');
   // sort_order 仅用于 ORDER BY，不参与 SELECT（SQLite 允许）；前端不使用该字段
-  const sitesQuery = `SELECT id, name, url, logo, desc, catelog_id, catelog_name
+  const sitesQuery = `SELECT id, name, name_en, url, logo, desc, desc_en, catelog_id, catelog_name
                       FROM sites WHERE (is_private = 0 OR ? = 1) ORDER BY sort_order ASC, create_time DESC`;
 
   // Settings 缓存：优先从 KV 读取，减少数据库查询
