@@ -3,7 +3,6 @@ import { isAdminAuthenticated, getHomeCacheKey, clearHomeCacheDirty, markHomeCac
 import { FONT_MAP, HOME_CACHE_TTL } from './constants';
 import { escapeHTML, sanitizeUrl, normalizeSortOrder, getStyleStr, sanitizeStyleColor } from './lib/utils';
 import { getSettingsKeys, parseSettings } from './lib/settings-parser';
-import { t as i18nT } from './i18n/strings';
 import { renderHorizontalMenu, renderVerticalMenu } from './lib/menu-renderer';
 import { renderSiteCards, renderEmptyState } from './lib/card-renderer';
 import { buildCardHydrationState } from './lib/card-model';
@@ -246,7 +245,7 @@ export async function onRequest(context) {
   const allLinkActiveMarker = allLinkActive ? 'nav-item-active' : '';
   const horizontalAllLink = `
     <div class="menu-item-wrapper relative inline-block text-left">
-      <a href="?catalog=all" class="nav-btn ${allLinkClass} ${allLinkActiveMarker}">${i18nT('home.category.all', preferredLang)}</a>
+      <a href="?catalog=all" class="nav-btn ${allLinkClass} ${allLinkActiveMarker}">${preferredLang === 'en' ? 'All' : '全部'}</a>
     </div>`;
   const horizontalCatalogMarkup = horizontalAllLink + renderHorizontalMenu(rootCategories, currentCatalogName);
   const catalogLinkMarkup = renderVerticalMenu(rootCategories, currentCatalogName, isCustomWallpaper);
@@ -278,8 +277,8 @@ export async function onRequest(context) {
 
   // === 12. 计算文本和统计信息 ===
   const headingPlainText = currentCatalogName
-    ? `${currentCatalogName} · ${sites.length} ${i18nT('home.bookmark.unit', preferredLang)}`
-    : `${i18nT('home.bookmark.all_count', preferredLang, { count: sites.length })}`;
+    ? `${currentCatalogName} · ${sites.length} ${preferredLang === 'en' ? 'bookmarks' : '个书签'}`
+    : `${preferredLang === 'en' ? `All Bookmarks · ${sites.length}` : `全部收藏 · ${sites.length} 个书签`}`;
   const headingText = escapeHTML(headingPlainText);
   const headingDefaultAttr = escapeHTML(headingPlainText);
   const headingActiveAttr = catalogExists ? escapeHTML(currentCatalogName) : '';
@@ -598,13 +597,13 @@ export async function onRequest(context) {
     'HITOKOTO_CLASS': hitokotoClass,
     'LEFT_TOP_ACTION': leftTopActionHtml,
     'RIGHT_TOP_ACTION': topRightActionsHtml,
-    'SITE_NAME': escapeHTML(i18nT('site.name', preferredLang, { default: siteName })),
-    'SITE_TAGLINE': escapeHTML(i18nT('site.tagline', preferredLang)),
-    'SITE_DESCRIPTION': escapeHTML(i18nT('site.subtitle', preferredLang, { default: siteDescription })),
-    'HOME_SEARCH_PLACEHOLDER': escapeHTML(i18nT('home.search.placeholder', preferredLang)),
-    'T_HOME_COPY': escapeHTML(i18nT('home.bookmark.copy', preferredLang)),
-    'T_HOME_COPIED': escapeHTML(i18nT('home.bookmark.copied', preferredLang)),
-    'T_NO_DESC': escapeHTML(i18nT('home.bookmark.no_desc', preferredLang)),
+    'SITE_NAME': escapeHTML(preferredLang === 'en' ? 'Pipilu Tools' : (S.home_site_name || env.SITE_NAME || '皮皮鲁工具大全')),
+    'SITE_TAGLINE': escapeHTML(preferredLang === 'en' ? 'Navigation' : '网址导航'),
+    'SITE_DESCRIPTION': escapeHTML(preferredLang === 'en' ? 'A multi-functional network tool platform, constantly updated' : (S.home_site_description || env.SITE_DESCRIPTION || '一个多功能网络工具平台 不断更新中')),
+    'HOME_SEARCH_PLACEHOLDER': escapeHTML(preferredLang === 'en' ? 'Search bookmarks...' : '搜索书签...'),
+    'T_HOME_COPY': escapeHTML(preferredLang === 'en' ? 'Copy' : '复制'),
+    'T_HOME_COPIED': escapeHTML(preferredLang === 'en' ? 'Copied!' : '已复制!'),
+    'T_NO_DESC': escapeHTML(preferredLang === 'en' ? 'No description' : '暂无描述'),
     'CANONICAL_URL': escapeHTML(canonicalUrl),
     'OG_IMAGE_URL': escapeHTML(ogImageUrl),
     'FOOTER_TEXT': escapeHTML(footerText),
