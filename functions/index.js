@@ -49,11 +49,6 @@ export async function onRequest(context) {
   const includePrivate = isAuthenticated ? 1 : 0;
 
   // === 1. 缓存检查 ===
-  const url = new URL(request.url);
-  const isHomePage = url.pathname === '/' && !url.search;
-  const cacheScope = isAuthenticated ? 'private' : 'public';
-  const cookies = request.headers.get('Cookie') || '';
-  const preferredLang = cookies.includes('lang=en') ? 'en' : 'zh';
   const homeCacheKey = getHomeCacheKey(cacheScope) + ':' + preferredLang;
   const hasLegacyStaleCookie = cookies.includes('iori_cache_stale=1');
   const hasPublicStaleCookie = hasLegacyStaleCookie || cookies.includes('iori_cache_public_stale=1');
@@ -179,20 +174,6 @@ export async function onRequest(context) {
   let allSites = sitesResult.results || [];
   if (sitesResult.error) return new Response(`Failed to fetch sites: ${sitesResult.error.message}`, { status: 500 });
 
-  // === 5.1 语言本地化（en → 把 name/desc/catelog_name 替换为 _en 版本；无则保留中文） ===
-  if (preferredLang === 'en') {
-    for (const cat of categoryMap.values()) {
-      if (cat.name_en) cat.catelog = cat.name_en;
-    }
-    for (const site of allSites) {
-      if (site.name_en) site.name = site.name_en;
-      if (site.desc_en) site.desc = site.desc_en;
-      if (site.catelog_id && categoryMap.has(site.catelog_id)) {
-        const localizedCatName = categoryMap.get(site.catelog_id).catelog;
-        if (localizedCatName) site.catelog_name = localizedCatName;
-      }
-    }
-  }
 
   function resolveCatalogId(catalogValue, options = {}) {
     const value = String(catalogValue || '').trim();
@@ -245,7 +226,7 @@ export async function onRequest(context) {
   const allLinkActiveMarker = allLinkActive ? 'nav-item-active' : '';
   const horizontalAllLink = `
     <div class="menu-item-wrapper relative inline-block text-left">
-      <a href="?catalog=all" class="nav-btn ${allLinkClass} ${allLinkActiveMarker}">${preferredLang === 'en' ? 'All' : '全部'}</a>
+      <a href="?catalog=all" class="nav-btn ${allLinkClass} ${allLinkActiveMarker}">全部</a>
     </div>`;
   const horizontalCatalogMarkup = horizontalAllLink + renderHorizontalMenu(rootCategories, currentCatalogName);
   const catalogLinkMarkup = renderVerticalMenu(rootCategories, currentCatalogName, isCustomWallpaper);
@@ -276,9 +257,7 @@ export async function onRequest(context) {
   let gridClass = `grid ${getMobileGridClass(S.mobile_layout_grid_cols)} ${getDesktopGridClass(S.layout_grid_cols)} ${mobileCardStyleClass} ${desktopCardStyleClass} gap-3 sm:gap-6 justify-items-center`;
 
   // === 12. 计算文本和统计信息 ===
-  const headingPlainText = currentCatalogName
-    ? `${currentCatalogName} · ${sites.length} ${preferredLang === 'en' ? 'bookmarks' : '个书签'}`
-    : `${preferredLang === 'en' ? `All Bookmarks · ${sites.length}` : `全部收藏 · ${sites.length} 个书签`}`;
+  const headingPlainText = currentCatalogName ? `${currentCatalogName} · ${sites.length} 个书签` : `全部收藏 · ${sites.length} 个书签`;
   const headingText = escapeHTML(headingPlainText);
   const headingDefaultAttr = escapeHTML(headingPlainText);
   const headingActiveAttr = catalogExists ? escapeHTML(currentCatalogName) : '';
@@ -410,18 +389,9 @@ export async function onRequest(context) {
       </svg>
     </button>`;
 
-  // 翻译按钮：放到意见反馈左边，切换 cookie lang=zh/en 后重载，SSR 走中/英文本
-  const langIconHtml = `
-    <button id="langToggleBtn" class="top-action-icon lang-action-icon" title="Switch to English" aria-label="切换语言">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="2" y1="12" x2="22" y2="12"></line>
-        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-      </svg>
-      <span data-lang-label style="font-size: 11px; font-weight: 600; margin-left: 2px; line-height: 1;">中</span>
-    </button>`;
 
-  const topRightActionsHtml = `<div class="fixed top-4 right-4 z-50 flex items-center gap-3">${langIconHtml}${feedbackIconHtml}${themeIconHtml}${adminIconHtml}</div>`;
+
+  const topRightActionsHtml = `<div class="fixed top-4 right-4 z-50 flex items-center gap-3">${feedbackIconHtml}${themeIconHtml}${adminIconHtml}</div>`;
   const leftTopActionHtml = `
     <div class="fixed top-4 left-4 z-50 ${mobileToggleVisibilityClass}">
       <button id="sidebarToggle" class="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -597,13 +567,8 @@ export async function onRequest(context) {
     'HITOKOTO_CLASS': hitokotoClass,
     'LEFT_TOP_ACTION': leftTopActionHtml,
     'RIGHT_TOP_ACTION': topRightActionsHtml,
-    'SITE_NAME': escapeHTML(preferredLang === 'en' ? 'Pipilu Tools' : (S.home_site_name || env.SITE_NAME || '皮皮鲁工具大全')),
-    'SITE_TAGLINE': escapeHTML(preferredLang === 'en' ? 'Navigation' : '网址导航'),
-    'SITE_DESCRIPTION': escapeHTML(preferredLang === 'en' ? 'A multi-functional network tool platform, constantly updated' : (S.home_site_description || env.SITE_DESCRIPTION || '一个多功能网络工具平台 不断更新中')),
-    'HOME_SEARCH_PLACEHOLDER': escapeHTML(preferredLang === 'en' ? 'Search bookmarks...' : '搜索书签...'),
-    'T_HOME_COPY': escapeHTML(preferredLang === 'en' ? 'Copy' : '复制'),
-    'T_HOME_COPIED': escapeHTML(preferredLang === 'en' ? 'Copied!' : '已复制!'),
-    'T_NO_DESC': escapeHTML(preferredLang === 'en' ? 'No description' : '暂无描述'),
+    'SITE_NAME': escapeHTML(siteName),
+    'SITE_DESCRIPTION': escapeHTML(siteDescription),
     'CANONICAL_URL': escapeHTML(canonicalUrl),
     'OG_IMAGE_URL': escapeHTML(ogImageUrl),
     'FOOTER_TEXT': escapeHTML(footerText),

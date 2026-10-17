@@ -2,7 +2,6 @@
 import { isAdminAuthenticated, errorResponse, jsonResponse, normalizeSortOrder, markHomeCacheDirty } from '../../_middleware';
 import { escapeLikePattern, buildFaviconUrl, getUrlMatchCandidates, normalizeUrlForStorage, parsePagination } from '../../lib/utils';
 import { normalizeBookmarkDesc, normalizeBookmarkLogo, normalizeBookmarkName, normalizeBookmarkUrl } from '../../lib/validators';
-import { translateBatchToEnglish } from '../../lib/translator';
 
 const MAX_CONFIG_SEARCH_KEYWORD_LENGTH = 100;
 const MAX_PUBLIC_PAGE_SIZE = 200;

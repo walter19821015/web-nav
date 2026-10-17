@@ -82,12 +82,12 @@ export function buildCardTemplateConfig(settings = {}, device = 'desktop') {
   };
 }
 
-export function buildCardViewModel(site, lang) {
+export function buildCardViewModel(site) {
   const rawName = site?.name || '未命名';
   const normalizedUrl = sanitizeUrl(site?.url);
   const normalizedLogo = sanitizeUrl(site?.logo);
   const rawCatalog = site?.catelog_name || site?.catelog || '未分类';
-  const rawDesc = (site?.desc || (lang === 'en' ? 'No description' : '暂无描述'));
+  const rawDesc = site?.desc || '暂无描述';
 
   return {
     id: site?.id,

@@ -1,7 +1,6 @@
 // functions/api/categories/create.js
 import { isAdminAuthenticated, errorResponse, jsonResponse, normalizeSortOrder, markHomeCacheDirty } from '../../_middleware';
 import { normalizeCategoryName } from '../../lib/validators';
-import { translateToEnglish } from '../../lib/translator';
 
 export async function onRequestPost(context) {
   const { request, env } = context;

@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{SITE_NAME}} - {{SITE_TAGLINE}}</title>
+  <title>{{SITE_NAME}} - 网址导航</title>
   <meta name="description" content="{{SITE_DESCRIPTION}}">
   <link rel="canonical" href="{{CANONICAL_URL}}">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="{{SITE_NAME}}">
-  <meta property="og:title" content="{{SITE_NAME}} - {{SITE_TAGLINE}}">
+  <meta property="og:title" content="{{SITE_NAME}} - 网址导航">
   <meta property="og:description" content="{{SITE_DESCRIPTION}}">
   <meta property="og:url" content="{{CANONICAL_URL}}">
   <meta property="og:image" content="{{OG_IMAGE_URL}}">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="{{SITE_NAME}} - {{SITE_TAGLINE}}">
+  <meta name="twitter:title" content="{{SITE_NAME}} - 网址导航">
   <meta name="twitter:description" content="{{SITE_DESCRIPTION}}">
   <meta name="twitter:image" content="{{OG_IMAGE_URL}}">
   <link rel="icon" href="/favicon.svg?v=148aafdf" type="image/svg+xml">
@@ -84,7 +84,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
-            <span class="text-gray-700 dark:text-gray-200" data-i18n="home.sidebar.all">全部</span>
+            <span class="text-gray-700 dark:text-gray-200">全部</span>
           </a>
           {{CATALOG_LINKS}}
         </div>
@@ -150,7 +150,7 @@
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11l7-7 7 7M5 19l7-7 7 7" />
     </svg>
   </button>
-  <button type="button" id="addSiteBtnFloating" class="{{SUBMISSION_CLASS}} fixed bottom-24 right-8 z-40 hidden min-[550px]:flex p-3 rounded-full bg-accent-500 text-white shadow-lg hover:bg-accent-600 transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2" title="公开投稿" aria-label="公开投稿" data-i18n-title="home.add.button" data-i18n-aria="home.add.button">
+  <button type="button" id="addSiteBtnFloating" class="{{SUBMISSION_CLASS}} fixed bottom-24 right-8 z-40 hidden min-[550px]:flex p-3 rounded-full bg-accent-500 text-white shadow-lg hover:bg-accent-600 transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2" title="公开投稿" aria-label="公开投稿">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14M5 12h14" />
     </svg>
@@ -161,7 +161,7 @@
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 transform translate-y-8 transition-all duration-300">
       <div class="p-6">
         <div class="flex items-center justify-between mb-4">
-          <h2 class="text-xl font-semibold text-gray-900" data-i18n="modal.add.title">添加新书签</h2>
+          <h2 class="text-xl font-semibold text-gray-900">添加新书签</h2>
           <button id="closeModal" class="text-gray-400 hover:text-gray-500">
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -171,27 +171,27 @@
         
         <form id="addSiteForm" class="space-y-4">
           <div>
-            <label for="addSiteName" class="block text-sm font-medium text-gray-700" data-i18n="modal.add.name">名称</label>
+            <label for="addSiteName" class="block text-sm font-medium text-gray-700">名称</label>
             <input type="text" id="addSiteName" required class="mt-1 block w-full px-3 py-2 border border-primary-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-400">
           </div>
           
           <div>
-            <label for="addSiteUrl" class="block text-sm font-medium text-gray-700" data-i18n="modal.add.url">网址</label>
+            <label for="addSiteUrl" class="block text-sm font-medium text-gray-700">网址</label>
             <input type="text" id="addSiteUrl" required class="mt-1 block w-full px-3 py-2 border border-primary-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-400">
           </div>
           
           <div>
-            <label for="addSiteLogo" class="block text-sm font-medium text-gray-700" data-i18n="modal.add.logo">Logo (可选)</label>
+            <label for="addSiteLogo" class="block text-sm font-medium text-gray-700">Logo (可选)</label>
             <input type="text" id="addSiteLogo" class="mt-1 block w-full px-3 py-2 border border-primary-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-400">
           </div>
           
           <div>
-            <label for="addSiteDesc" class="block text-sm font-medium text-gray-700" data-i18n="modal.add.desc">描述 (可选)</label>
+            <label for="addSiteDesc" class="block text-sm font-medium text-gray-700">描述 (可选)</label>
             <textarea id="addSiteDesc" rows="2" class="mt-1 block w-full px-3 py-2 border border-primary-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-400"></textarea>
           </div>
           
           <div>
-            <label for="addSiteCatelog" class="block text-sm font-medium text-gray-700" data-i18n="modal.add.category">分类</label>
+            <label for="addSiteCatelog" class="block text-sm font-medium text-gray-700">分类</label>
             <select id="addSiteCatelog" required class="mt-1 block w-full px-3 py-2 border border-primary-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-400 bg-white">
               <option value="" disabled selected>加载中...</option>
             </select>
@@ -202,10 +202,10 @@
           <div id="addSiteMessage" class="hidden rounded-lg border px-3 py-2 text-sm leading-relaxed"></div>
           
           <div class="flex justify-end pt-4">
-            <button type="button" id="cancelAddSite" class="bg-white py-2 px-4 border border-primary-100 rounded-md shadow-sm text-sm font-medium text-primary-600 hover:bg-secondary-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-200 mr-3" data-i18n="modal.add.cancel">
+            <button type="button" id="cancelAddSite" class="bg-white py-2 px-4 border border-primary-100 rounded-md shadow-sm text-sm font-medium text-primary-600 hover:bg-secondary-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-200 mr-3">
               取消
             </button>
-            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-accent-500 hover:bg-accent-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-400" data-i18n="modal.add.submit">
+            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-accent-500 hover:bg-accent-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-400">
               提交
             </button>
           </div>
@@ -219,14 +219,14 @@
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl mx-4 transform translate-y-8 transition-all duration-300 max-h-[90vh] overflow-hidden flex flex-col">
       <div class="p-6 overflow-y-auto">
         <div class="flex items-center justify-between mb-4">
-          <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100" data-i18n="feedback.title">意见反馈</h2>
-          <button id="closeFeedbackModal" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300" data-i18n-aria="feedback.close" aria-label="关闭">
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">意见反馈</h2>
+          <button id="closeFeedbackModal" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300" aria-label="关闭">
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </button>
         </div>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4" data-i18n="feedback.subtitle">登录 GitHub 账号后留言，你可以在 GitHub Discussions 中查看所有反馈。</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">登录 GitHub 账号后留言，你可以在 GitHub Discussions 中查看所有反馈。</p>
         <script src="https://giscus.app/client.js"
                 data-repo="walter19821015/web-nav"
                 data-repo-id="R_kgDOVK7zEw"
@@ -247,7 +247,6 @@
     </div>
   </div>
 
-  <script src="/js/i18n.js?v=74b5f334"></script>
   <script src="/js/home-ui.js?v=7c74dc1b"></script>
   <script src="/js/home-lang.js?v=f8909a75"></script>
   <script src="/js/home-feedback.js?v=c8e6147e"></script>
