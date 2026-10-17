@@ -3,6 +3,7 @@ import { isAdminAuthenticated, getHomeCacheKey, clearHomeCacheDirty, markHomeCac
 import { FONT_MAP, HOME_CACHE_TTL } from './constants';
 import { escapeHTML, sanitizeUrl, normalizeSortOrder, getStyleStr, sanitizeStyleColor } from './lib/utils';
 import { getSettingsKeys, parseSettings } from './lib/settings-parser';
+import { t as i18nT } from './i18n/strings';
 import { renderHorizontalMenu, renderVerticalMenu } from './lib/menu-renderer';
 import { renderSiteCards, renderEmptyState } from './lib/card-renderer';
 import { buildCardHydrationState } from './lib/card-model';
@@ -595,8 +596,9 @@ export async function onRequest(context) {
     'HITOKOTO_CLASS': hitokotoClass,
     'LEFT_TOP_ACTION': leftTopActionHtml,
     'RIGHT_TOP_ACTION': topRightActionsHtml,
-    'SITE_NAME': escapeHTML(siteName),
-    'SITE_DESCRIPTION': escapeHTML(siteDescription),
+    'SITE_NAME': escapeHTML(i18nT('site.name', preferredLang, { default: siteName })),
+    'SITE_TAGLINE': escapeHTML(i18nT('site.tagline', preferredLang)),
+    'SITE_DESCRIPTION': escapeHTML(i18nT('site.subtitle', preferredLang, { default: siteDescription })),
     'CANONICAL_URL': escapeHTML(canonicalUrl),
     'OG_IMAGE_URL': escapeHTML(ogImageUrl),
     'FOOTER_TEXT': escapeHTML(footerText),

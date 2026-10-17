@@ -30,6 +30,7 @@ const HTML_FILES = {
     { file: 'public/js/home-category-nav.js', pattern: /\/js\/home-category-nav\.js\?v=[a-zA-Z0-9]+/ },
     { file: 'public/js/home-feedback.js', pattern: /\/js\/home-feedback\.js\?v=[a-zA-Z0-9]+/ },
     { file: 'public/js/home-lang.js', pattern: /\/js\/home-lang\.js\?v=[a-zA-Z0-9]+/ },
+    { file: 'public/js/i18n.js', pattern: /\/js\/i18n\.js\?v=[a-zA-Z0-9]+/ },
     { file: 'public/js/main.js', pattern: /\/js\/main\.js\?v=[a-zA-Z0-9]+/ },
     { file: 'public/favicon.svg', pattern: /\/favicon\.svg\?v=[a-zA-Z0-9]+/ },
   ],
