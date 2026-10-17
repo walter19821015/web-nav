@@ -51,6 +51,21 @@ async function runIncrementalMigrations(env) {
   if (!categoryCols.has('parent_id')) {
     alterStatements.push(env.NAV_DB.prepare('ALTER TABLE category ADD COLUMN parent_id INTEGER DEFAULT 0'));
   }
+  if (!sitesCols.has('name_en')) {
+    alterStatements.push(env.NAV_DB.prepare('ALTER TABLE sites ADD COLUMN name_en TEXT'));
+  }
+  if (!sitesCols.has('desc_en')) {
+    alterStatements.push(env.NAV_DB.prepare('ALTER TABLE sites ADD COLUMN desc_en TEXT'));
+  }
+  if (!pendingCols.has('name_en')) {
+    alterStatements.push(env.NAV_DB.prepare('ALTER TABLE pending_sites ADD COLUMN name_en TEXT'));
+  }
+  if (!pendingCols.has('desc_en')) {
+    alterStatements.push(env.NAV_DB.prepare('ALTER TABLE pending_sites ADD COLUMN desc_en TEXT'));
+  }
+  if (!categoryCols.has('name_en')) {
+    alterStatements.push(env.NAV_DB.prepare('ALTER TABLE category ADD COLUMN name_en TEXT'));
+  }
 
   for (const statement of alterStatements) {
     try {

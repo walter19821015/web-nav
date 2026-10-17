@@ -52,8 +52,9 @@ export async function onRequest(context) {
   const url = new URL(request.url);
   const isHomePage = url.pathname === '/' && !url.search;
   const cacheScope = isAuthenticated ? 'private' : 'public';
-  const homeCacheKey = getHomeCacheKey(cacheScope);
   const cookies = request.headers.get('Cookie') || '';
+  const preferredLang = cookies.includes('lang=en') ? 'en' : 'zh';
+  const homeCacheKey = getHomeCacheKey(cacheScope) + ':' + preferredLang;
   const hasLegacyStaleCookie = cookies.includes('iori_cache_stale=1');
   const hasPublicStaleCookie = hasLegacyStaleCookie || cookies.includes('iori_cache_public_stale=1');
   const hasPrivateStaleCookie = hasLegacyStaleCookie || cookies.includes('iori_cache_private_stale=1');
@@ -108,8 +109,8 @@ export async function onRequest(context) {
 
   // === 2. 并行执行数据库查询 + 模板获取 ===
   const categoryQuery = isAuthenticated
-    ? 'SELECT id, catelog, sort_order, parent_id, is_private FROM category ORDER BY sort_order ASC, id ASC'
-    : 'SELECT id, catelog, sort_order, parent_id FROM category WHERE is_private = 0 ORDER BY sort_order ASC, id ASC';
+    ? 'SELECT id, catelog, name_en, sort_order, parent_id, is_private FROM category ORDER BY sort_order ASC, id ASC'
+    : 'SELECT id, catelog, name_en, sort_order, parent_id FROM category WHERE is_private = 0 ORDER BY sort_order ASC, id ASC';
 
   const settingsKeys = getSettingsKeys();
   const settingsPlaceholders = settingsKeys.map(() => '?').join(',');
@@ -177,6 +178,21 @@ export async function onRequest(context) {
   // === 5. 处理站点结果 ===
   let allSites = sitesResult.results || [];
   if (sitesResult.error) return new Response(`Failed to fetch sites: ${sitesResult.error.message}`, { status: 500 });
+
+  // === 5.1 语言本地化（en → 把 name/desc/catelog_name 替换为 _en 版本；无则保留中文） ===
+  if (preferredLang === 'en') {
+    for (const cat of categoryMap.values()) {
+      if (cat.name_en) cat.catelog = cat.name_en;
+    }
+    for (const site of allSites) {
+      if (site.name_en) site.name = site.name_en;
+      if (site.desc_en) site.desc = site.desc_en;
+      if (site.catelog_id && categoryMap.has(site.catelog_id)) {
+        const localizedCatName = categoryMap.get(site.catelog_id).catelog;
+        if (localizedCatName) site.catelog_name = localizedCatName;
+      }
+    }
+  }
 
   function resolveCatalogId(catalogValue, options = {}) {
     const value = String(catalogValue || '').trim();

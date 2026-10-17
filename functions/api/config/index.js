@@ -2,6 +2,7 @@
 import { isAdminAuthenticated, errorResponse, jsonResponse, normalizeSortOrder, markHomeCacheDirty } from '../../_middleware';
 import { escapeLikePattern, buildFaviconUrl, getUrlMatchCandidates, normalizeUrlForStorage, parsePagination } from '../../lib/utils';
 import { normalizeBookmarkDesc, normalizeBookmarkLogo, normalizeBookmarkName, normalizeBookmarkUrl } from '../../lib/validators';
+import { translateBatchToEnglish } from '../../lib/translator';
 
 const MAX_CONFIG_SEARCH_KEYWORD_LENGTH = 100;
 const MAX_PUBLIC_PAGE_SIZE = 200;
@@ -133,6 +134,17 @@ export async function onRequestPost(context) {
       INSERT INTO sites (name, url, logo, desc, catelog_id, catelog_name, sort_order, is_private)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(sanitizedName, sanitizedUrl, sanitizedLogo, sanitizedDesc, catelogId, categoryResult.catelog, sortOrderValue, finalIsPrivate).run();
+
+    // 异步补翻中→英（静默失败，保留原文 _en 字段为 NULL，调用方可读原文）
+    const insertedId = insert?.meta?.last_row_id;
+    if (insertedId && sanitizedName) {
+      const [nameEn, descEn] = await translateBatchToEnglish(env, [sanitizedName, sanitizedDesc || '']);
+      if (nameEn || descEn) {
+        await env.NAV_DB.prepare(
+          'UPDATE sites SET name_en = COALESCE(?, name_en), desc_en = COALESCE(?, desc_en) WHERE id = ?'
+        ).bind(nameEn || null, descEn || null, insertedId).run();
+      }
+    }
 
     await markHomeCacheDirty(env, finalIsPrivate ? 'private' : 'all');
 

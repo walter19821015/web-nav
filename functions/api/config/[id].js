@@ -2,6 +2,7 @@
 import { isAdminAuthenticated, errorResponse, jsonResponse, normalizeSortOrder, markHomeCacheDirty } from '../../_middleware';
 import { buildFaviconUrl, getUrlMatchCandidates, normalizeUrlForStorage } from '../../lib/utils';
 import { normalizeBookmarkDesc, normalizeBookmarkLogo, normalizeBookmarkName, normalizeBookmarkUrl } from '../../lib/validators';
+import { translateBatchToEnglish } from '../../lib/translator';
 
 
 export async function onRequestGet(context) {
@@ -98,6 +99,14 @@ export async function onRequestPut(context) {
       SET name = ?, url = ?, logo = ?, desc = ?, catelog_id = ?, catelog_name = ?, sort_order = ?, is_private = ?, update_time = CURRENT_TIMESTAMP
       WHERE id = ?
     `).bind(sanitizedName, sanitizedUrl, sanitizedLogo, sanitizedDesc, catelog_id, catelogName, sortOrderValue, finalIsPrivate, id).run();
+
+    // 中→英 补翻（静默失败；name_en/desc_en 失败时保留原值）
+    const [nameEn, descEn] = await translateBatchToEnglish(env, [sanitizedName, sanitizedDesc || '']);
+    if (nameEn || descEn) {
+      await env.NAV_DB.prepare(
+        'UPDATE sites SET name_en = COALESCE(?, name_en), desc_en = COALESCE(?, desc_en) WHERE id = ?'
+      ).bind(nameEn || null, descEn || null, id).run();
+    }
 
     const dirtyScope = (existing.is_private === 1 && finalIsPrivate === 1) ? 'private' : 'all';
     await markHomeCacheDirty(env, dirtyScope);

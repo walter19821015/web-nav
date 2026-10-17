@@ -1,6 +1,7 @@
 // functions/api/categories/create.js
 import { isAdminAuthenticated, errorResponse, jsonResponse, normalizeSortOrder, markHomeCacheDirty } from '../../_middleware';
 import { normalizeCategoryName } from '../../lib/validators';
+import { translateToEnglish } from '../../lib/translator';
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -44,10 +45,19 @@ export async function onRequestPost(context) {
     const isPrivate = parentCategory?.is_private === 1 ? 1 : (body.is_private ? 1 : 0);
 
     // 插入新分类
-    await env.NAV_DB.prepare(`
+    const insertResult = await env.NAV_DB.prepare(`
       INSERT INTO category (catelog, sort_order, parent_id, is_private)
       VALUES (?, ?, ?, ?)
     `).bind(categoryName, sortOrderValue, parentId, isPrivate).run();
+
+    // 中→英 补翻分类名（静默失败）
+    const newCategoryId = insertResult?.meta?.last_row_id;
+    if (newCategoryId) {
+      const nameEn = await translateToEnglish(env, categoryName);
+      if (nameEn) {
+        await env.NAV_DB.prepare('UPDATE category SET name_en = ? WHERE id = ?').bind(nameEn, newCategoryId).run();
+      }
+    }
 
     await markHomeCacheDirty(env, isPrivate ? 'private' : 'all');
 

@@ -1,6 +1,7 @@
 // functions/api/categories/[id].js
 import { isAdminAuthenticated, errorResponse, jsonResponse, normalizeSortOrder, markHomeCacheDirty } from '../../_middleware';
 import { normalizeCategoryName } from '../../lib/validators';
+import { translateToEnglish } from '../../lib/translator';
 
 function buildPrivateDescendantStatements(env, categoryId) {
   const descendantsCte = `
@@ -136,6 +137,12 @@ export async function onRequestPut(context) {
     }
 
     await env.NAV_DB.batch(batchStmts);
+
+    // 中→英 补翻分类名（静默失败）
+    const nameEn = await translateToEnglish(env, catelog);
+    if (nameEn) {
+      await env.NAV_DB.prepare('UPDATE category SET name_en = ? WHERE id = ?').bind(nameEn, categoryId).run();
+    }
 
     await markHomeCacheDirty(env, 'all');
 
