@@ -49,7 +49,7 @@ export async function onRequest(context) {
   const includePrivate = isAuthenticated ? 1 : 0;
 
   // === 1. 缓存检查 ===
-  const homeCacheKey = getHomeCacheKey(cacheScope) + ':' + preferredLang;
+  const homeCacheKey = getHomeCacheKey(cacheScope);
   const hasLegacyStaleCookie = cookies.includes('iori_cache_stale=1');
   const hasPublicStaleCookie = hasLegacyStaleCookie || cookies.includes('iori_cache_public_stale=1');
   const hasPrivateStaleCookie = hasLegacyStaleCookie || cookies.includes('iori_cache_private_stale=1');
@@ -233,7 +233,7 @@ export async function onRequest(context) {
 
   // === 10. 生成站点卡片 HTML ===
   let sitesGridMarkup = sites.length > 0
-    ? renderSiteCards(sites, S, preferredLang)
+    ? renderSiteCards(sites, S)
     : renderEmptyState(categories.length, S.home_hide_admin);
 
   // === 11. 计算 Grid 列数 ===
