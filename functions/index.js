@@ -408,7 +408,18 @@ export async function onRequest(context) {
       </svg>
     </button>`;
 
-  const topRightActionsHtml = `<div class="fixed top-4 right-4 z-50 flex items-center gap-3">${feedbackIconHtml}${themeIconHtml}${adminIconHtml}</div>`;
+  // 翻译按钮：放到意见反馈左边，切换 cookie lang=zh/en 后重载，SSR 走中/英文本
+  const langIconHtml = `
+    <button id="langToggleBtn" class="top-action-icon lang-action-icon" title="Switch to English" aria-label="切换语言">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="2" y1="12" x2="22" y2="12"></line>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+      </svg>
+      <span data-lang-label style="font-size: 11px; font-weight: 600; margin-left: 2px; line-height: 1;">中</span>
+    </button>`;
+
+  const topRightActionsHtml = `<div class="fixed top-4 right-4 z-50 flex items-center gap-3">${langIconHtml}${feedbackIconHtml}${themeIconHtml}${adminIconHtml}</div>`;
   const leftTopActionHtml = `
     <div class="fixed top-4 left-4 z-50 ${mobileToggleVisibilityClass}">
       <button id="sidebarToggle" class="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md hover:bg-gray-100 dark:hover:bg-gray-700">
