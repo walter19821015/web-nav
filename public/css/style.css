@@ -2019,3 +2019,13 @@ html:not(.dark) .dropdown-item.active {
     margin-bottom: 0;
   }
 }
+/* 强制隐藏后端注入的默认版权英文文本 */
+footer .flex p {
+  display: none !important;
+}
+
+/* 强制显示在 index.html 中写好的 4 个链接容器 */
+footer .flex div {
+  display: flex !important;
+  visibility: visible !important;
+}
