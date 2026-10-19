@@ -316,5 +316,57 @@
     }
   })();
 </script>
+  <script>
+document.addEventListener('DOMContentLoaded', function () {
+  // 1. 定位搜索框
+  const searchInput = document.querySelector('input[placeholder*="搜索"]') || document.querySelector('input[type="text"]');
+  if (!searchInput) return;
+
+  // 2. 监听实时输入与回车
+  searchInput.addEventListener('input', filterBookmarks);
+  searchInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      filterBookmarks();
+    }
+  });
+
+  function filterBookmarks() {
+    const val = searchInput.value.trim().toLowerCase();
+    // 获取页面上所有的卡片或链接条目
+    const cards = document.querySelectorAll('.card, .bookmark-item, .item, a[target="_blank"]');
+
+    cards.forEach(card => {
+      // 排除顶部导航栏和管理按钮自身
+      if (card.closest('header') || card.closest('nav') || card.closest('.search-box')) return;
+
+      const text = card.innerText.toLowerCase();
+      const href = (card.getAttribute('href') || '').toLowerCase();
+
+      // 如果卡片名称、描述或链接包含搜索词，则显示；否则隐藏
+      if (val === '' || text.includes(val) || href.includes(val)) {
+        card.style.display = '';
+        if (card.parentElement && card.parentElement.classList.contains('col')) {
+          card.parentElement.style.display = '';
+        }
+      } else {
+        card.style.display = 'none';
+        if (card.parentElement && card.parentElement.classList.contains('col')) {
+          card.parentElement.style.display = 'none';
+        }
+      }
+    });
+
+    // 联动处理空分类区块（如果整个分类下卡片全隐藏了，把分类标题也隐藏）
+    const sections = document.querySelectorAll('section, .category-section, .box');
+    sections.forEach(sec => {
+      const visibleCards = sec.querySelectorAll('.card:not([style*="display: none"]), .item:not([style*="display: none"])');
+      if (sec.querySelector('.card, .item')) {
+        sec.style.display = (visibleCards.length > 0 || val === '') ? '' : 'none';
+      }
+    });
+  }
+});
+</script>
 </body>
 </html>
