@@ -316,57 +316,55 @@
     }
   })();
 </script>
-  <script>
-document.addEventListener('DOMContentLoaded', function () {
-  // 1. 定位搜索框
-  const searchInput = document.querySelector('input[placeholder*="搜索"]') || document.querySelector('input[type="text"]');
-  if (!searchInput) return;
+ <script>
+(function() {
+  function initSearch() {
+    var input = document.getElementById('headerSearchInput');
+    if (!input) return;
 
-  // 2. 监听实时输入与回车
-  searchInput.addEventListener('input', filterBookmarks);
-  searchInput.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      filterBookmarks();
-    }
-  });
-
-  function filterBookmarks() {
-    const val = searchInput.value.trim().toLowerCase();
-    // 获取页面上所有的卡片或链接条目
-    const cards = document.querySelectorAll('.card, .bookmark-item, .item, a[target="_blank"]');
-
-    cards.forEach(card => {
-      // 排除顶部导航栏和管理按钮自身
-      if (card.closest('header') || card.closest('nav') || card.closest('.search-box')) return;
-
-      const text = card.innerText.toLowerCase();
-      const href = (card.getAttribute('href') || '').toLowerCase();
-
-      // 如果卡片名称、描述或链接包含搜索词，则显示；否则隐藏
-      if (val === '' || text.includes(val) || href.includes(val)) {
-        card.style.display = '';
-        if (card.parentElement && card.parentElement.classList.contains('col')) {
-          card.parentElement.style.display = '';
+    input.oninput = function() {
+      var query = input.value.trim().toLowerCase();
+      
+      // 定位所有工具卡片外层容器
+      var bookmarkCards = [];
+      document.querySelectorAll('a[target="_blank"]').forEach(function(link) {
+        var card = link.closest('.grid > div') || link.closest('.flex-col') || link.closest('div[class*="rounded"]');
+        if (card && bookmarkCards.indexOf(card) === -1) {
+          bookmarkCards.push(card);
         }
-      } else {
-        card.style.display = 'none';
-        if (card.parentElement && card.parentElement.classList.contains('col')) {
-          card.parentElement.style.display = 'none';
-        }
-      }
-    });
+      });
 
-    // 联动处理空分类区块（如果整个分类下卡片全隐藏了，把分类标题也隐藏）
-    const sections = document.querySelectorAll('section, .category-section, .box');
-    sections.forEach(sec => {
-      const visibleCards = sec.querySelectorAll('.card:not([style*="display: none"]), .item:not([style*="display: none"])');
-      if (sec.querySelector('.card, .item')) {
-        sec.style.display = (visibleCards.length > 0 || val === '') ? '' : 'none';
+      if (bookmarkCards.length === 0) {
+        bookmarkCards = Array.from(document.querySelectorAll('div')).filter(function(el) {
+          return el.querySelector('a[target="_blank"]') && el.parentElement && el.parentElement.classList.contains('grid');
+        });
       }
-    });
+
+      bookmarkCards.forEach(function(card) {
+        var text = (card.innerText || '').toLowerCase();
+        if (!query || text.indexOf(query) !== -1) {
+          card.style.setProperty('display', '', 'important');
+        } else {
+          card.style.setProperty('display', 'none', 'important');
+        }
+      });
+    };
+
+    input.onkeydown = function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        input.blur();
+      }
+    };
   }
-});
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSearch);
+  } else {
+    initSearch();
+  }
+  setTimeout(initSearch, 500);
+})();
 </script>
 </body>
 </html>
